@@ -26,7 +26,7 @@ One way to go here is to have packages for the various providers and runtimes li
 
 - APIs like the SessionStorage API from Remix (we already love it at SolidStart) can be used by different frameworks to build a common API surface layer, eg. `winter-session`
 - Amazing libraries built on these APIs can be used by users of all frameworks.. kindof like vite plugins for all the vite frameworks.
-  - [sergiodxa/remix-auth](https://github.com/sergiodxa/remix-auth), [sergiodxa/remix-auth-oauth0](https://github.com/sergiodxa/remix-auth-oauth2) `remix-auth-oauth0` -> maybe they reappear as`winter-auth`, `winter-auth-oauth0`?
+  - [sergiodxa/remix-auth](https://github.com/sergiodxa/remix-auth), [sergiodxa/remix-auth-oauth0](https://github.com/sergiodxa/remix-auth-oauth2) -> maybe they reappear as`winter-auth`, `winter-auth-oauth0`?
 - Security: This is probably the most major concern that makes this so worthwhile.. having all the framework contributors working to fix security issues in this layer is better for everybody. We are all going to keep bashing the same bugs.
 - True dev environments: For `cloudflare-workers`, we added a way to have a miniflare dev environment which calls back into vite code and can create a Cloudflare worker dev environment with Durable Object, KV Namespace supports, etc. This is also something that is very valuable to get working for everybody for their adapters. Integrating with a node environment basically.
 - Platforms/runtimes will be incentivized to contribute to one common layer instead of trying to make sure every framework does the job well.
