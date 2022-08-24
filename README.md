@@ -2,7 +2,7 @@
 
 ## Why?
 
-Each modern framework is slowly adopting the Web Fetch API as the server runtime API along with other Web Standard APIs. This is an awesome direction for the web and an amazing foundation for full-stack Javascript apps to be built on.
+Each modern framework is slowly adopting the [Web Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) as the server runtime API along with other Web Standard APIs. This is an awesome direction for the web and an amazing foundation for full-stack Javascript apps to be built on.
 
 There is a lot of duplicate work that a bunch of frameworks like SolidStart, Remix, SvelteKit, Astro, QwikCity, Nuxt, Next have done to support the Web Fetch API. The challenge is the variety of Javascript server runtimes available for developers to use:
 
@@ -20,6 +20,7 @@ All the frameworks have an adapter layer that takes the user's server entry and 
 I think we should try to minimize the differences on the core runtime APIs like the Web Fetch API, FormData API, WebCrypto API. The challenge is to make all the platforms/runtimes adapt to these APIs. Many providers already have a modern edge runtime that supports some or all of these APIs so we are off to a good start.
 
 One way to go here is to have packages for the various providers and runtimes like `winter-vercel`, `winter-netlify`, `winter-cloudflare-pages`, `winter-cloudflare-workers`, `winter-node` that takes the platform server runtime and adapts it to the Web Fetch API. This would be mostly be polyfills + helper functions to transform platform native objects to standard objects. Not build tools. They could help with setting up the platform-specific code with helper functions, eg. setup the worker function (with static files, etc) for `cloudflare-workers`. There is little opinion to be had here and very worthwhile getting to the best way of doing it correctly. These will not be adapters themselves but ideally used by the adapters of the frameworks.
+
 
 ### Benefits:
 
@@ -45,4 +46,14 @@ We also think its worth just shipping with typescript source that users can easi
 
 ### Why the name?
 
-Its an ode to the newly formed (WinterCG)[https://wintercg.org/]. Its a collaboration between the various Javascript server runtime providers in an effort to reach some convergence on the APIs.
+Its an ode to the newly formed [WinterCG](https://wintercg.org/). Its a collaboration between the various Javascript server runtime providers in an effort to reach some convergence on the APIs.
+
+## Important APIs:
+
+- [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), eg. `fetch`, `Request`, `Response`, `Headers`
+- [Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API), eg. `ReadableStream`, `WritableStream`, `TransformStream`
+- [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData), eg. `FormData`, `request.formData()`
+- [URL API](https://developer.mozilla.org/en-US/docs/Web/API/URL_API), eg. `URL`
+
+### Additional APIs:
+- [WebCrypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) eg. `crypto.subtle`
