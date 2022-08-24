@@ -57,3 +57,6 @@ Its an ode to the newly formed [WinterCG](https://wintercg.org/). Its a collabor
 
 ### Additional APIs:
 - [WebCrypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) eg. `crypto.subtle`
+
+There are also certain issues in the WinterCG fetch repo that we could deal with temporarily:
+- [Multipart parsing for Request.formData on the server](https://github.com/wintercg/fetch/issues/9)
