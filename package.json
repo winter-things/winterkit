@@ -1,0 +1,23 @@
+{
+  "name": "winterkit",
+  "version": "0.0.1",
+  "description": "## @winterkit/vite (imaginary)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winter-things/winterkit.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/winter-things/winterkit/issues"
+  },
+  "homepage": "https://github.com/winter-things/winterkit#readme",
+  "dependencies": {
+    "typescript": "^4.8.4",
+    "vitest": "^0.24.1"
+  }
+}

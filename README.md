@@ -1,8 +1,84 @@
 # winterkit
 
+Disclaimer: This is a work in progress. It is not ready for production use.
+
+The primary motivation for this project is to build a foundation for server-side Javascript frameworks. The goal is to provide a set of tools that can be used to build a framework that is easy to use, easy to extend, and they don't have to maintain it
+
+## @winterkit/vite (imaginary)
+
+Integrate with your framework's vite preset:
+
+It actually doesnt need to be passed an options on construction since its possible that some of this is config driven. If you add a config that sets the `winter` field in the vite config, this plugin will pick up the configuration from there.
+
+### Usage
+
+```js
+import { winter } from '@winterkit/vite'
+
+export default defineConfig({
+  plugins: [winter({
+    entry: 'src/entry-server.ts'
+    build: {
+      static: '.solid/client',
+    },
+    adapter: vercelWinter({
+      edge: true
+    })
+  })],
+})
+```
+
+
+```js
+import { winter } from '@winterkit/vite'
+
+export default defineConfig({
+  plugins: [winter()],
+  winter: {
+    entry: 'src/entry-server.ts'
+    build: {
+      static: '.solid/client',
+    },
+    adapter: vercelWinter({
+      edge: true
+    })
+  }
+})
+```
+
+## Ideas
+
+[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platforms.
+
+[ ] Vite plugin: 
+  - Take a server entry (server equivalent of `index.html`) and use it to drive the dev server. 
+    - HMR for the server
+    - Server-side rendering with Vite plugins applied
+  - Build the server with vite using the server entry and then bundle using the `adapter`
+  - Use the `adapter` to deploy the server, it knows how to use the various CLIs
+
+[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
+  - Unit tests for the runtime, 
+    - each runtime should run the test suite in a native environment, and be able to report back the results
+    - each platform should run the test suite in a native environment, and be able to report back the results
+  - Integration tests for the platform, 
+
+[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
+
+[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
+
+[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
+
+[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
+
+[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
+
+[ ] Tests for standard runtime
+
 ## Why?
 
 Each modern framework is slowly adopting the [Web Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) as the server runtime API along with other Web Standard APIs. This is an awesome direction for the web and an amazing foundation for full-stack Javascript apps to be built on.
+
 
 There is a lot of duplicate work that a bunch of frameworks like SolidStart, Remix, SvelteKit, Astro, QwikCity, Nuxt, Next have done to support the Web Fetch API. The challenge is the variety of Javascript server runtimes available for developers to use:
 

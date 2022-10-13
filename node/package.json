@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@hattip/adapter-node": "^0.0.19",
+    "parse-multipart-data": "^1.5.0",
+    "undici": "^5.11.0"
+  }
+}
