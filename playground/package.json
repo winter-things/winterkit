@@ -5,12 +5,16 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hattip/adapter-node": "^0.0.19",
-    "@hattip/compose": "^0.0.19"
+    "@winterkit/cloudflare-worker": "workspace:^0.0.1",
+    "@winterkit/node": "workspace:*",
+    "@winterkit/vite": "workspace:^0.0.3",
+    "vite": "^3.1.8"
   }
 }

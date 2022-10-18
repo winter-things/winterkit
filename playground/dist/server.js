@@ -1,4 +1,4 @@
-export default (event) => {
+const server = (event) => {
   console.log("hello");
   const response = new Response(
     `<div>Hello adasdasd adasdsd World ${JSON.stringify(
@@ -8,9 +8,12 @@ export default (event) => {
     )}</div>`,
     {
       headers: {
-        "content-type": "text/html",
-      },
+        "content-type": "text/html"
+      }
     }
   );
   return response;
+};
+export {
+  server as default
 };

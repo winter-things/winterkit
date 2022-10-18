@@ -1,4 +1,5 @@
 {
+  "name": "@winterkit/node",
   "dependencies": {
     "@hattip/adapter-node": "^0.0.19",
     "parse-multipart-data": "^1.5.0",

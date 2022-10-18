@@ -1,0 +1,6 @@
+packages:
+  - cloudflare-worker
+  - deno
+  - node
+  - plugin
+  - playground
