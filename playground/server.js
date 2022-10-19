@@ -1,11 +1,6 @@
 export default (event) => {
-  console.log("hello");
   const response = new Response(
-    `<div>Hello adasdasd adasdsd World ${JSON.stringify(
-      new URL(event.request.url),
-      null,
-      2
-    )}</div>`,
+    `<div>Hello from ${new URL(event.request.url).pathname}</div>`,
     {
       headers: {
         "content-type": "text/html",

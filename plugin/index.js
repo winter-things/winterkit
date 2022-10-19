@@ -1,4 +1,4 @@
-import { createMiddleware } from "@hattip/adapter-node/native-fetch";
+import { createMiddleware } from "@hattip/adapter-node";
 import { compose } from "@hattip/compose";
 import { join } from "node:path";
 import * as fs from "node:fs";
@@ -23,6 +23,7 @@ export function winter(options = {}) {
     name: "winter-server",
     config: () => {
       return {
+        appType: "custom",
         build: {
           rollupOptions: {
             input: {
@@ -96,31 +97,28 @@ export function winter(options = {}) {
       },
     },
     configurePreviewServer(vite) {
-      return () => {
-        console.log(vite_config.root);
-        removeHTMLMiddlewares(vite.middlewares);
+      // removeHTMLMiddlewares(vite.middlewares);
 
-        let handler = options.handler
-          ? options.handler
-          : vite_config.winter?.handler
-          ? vite_config.winter.handler
-          : async (ctx) => {
-              const handler = await import(
-                pathToFileURL(join(vite_config.root, "dist", "server.js")).href
-              );
-              if (!handler.default) {
-                throw new Error("No handler exported");
-              }
-              return await handler.default(ctx);
-            };
-        let adapter = options.adapter ?? vite_config.winter?.adapter;
+      let handler = options.handler
+        ? options.handler
+        : vite_config.winter?.handler
+        ? vite_config.winter.handler
+        : async (ctx) => {
+            const handler = await import(
+              pathToFileURL(join(vite_config.root, "dist", "server.js")).href
+            );
+            if (!handler.default) {
+              throw new Error("No handler exported");
+            }
+            return await handler.default(ctx);
+          };
+      let adapter = options.adapter ?? vite_config.winter?.adapter;
 
-        if (adapter && adapter.preview) {
-          let viteHandler = createViteHandler(vite, handler);
-          let adapterDevHandler = adapter.preview(vite, viteHandler);
-          vite.middlewares.use(adapterDevHandler);
-        }
-      };
+      if (adapter && adapter.preview) {
+        let viteHandler = createViteProdHandler(vite, handler);
+        let adapterDevHandler = adapter.preview(vite, viteHandler);
+        vite.middlewares.use(adapterDevHandler);
+      }
     },
     configureServer(devServer) {
       return () => {
@@ -227,7 +225,92 @@ export function createViteHandler(devServer, handler, { clientOut } = {}) {
       );
       return new Response(html, {
         headers: {
-          "Content-Type": "text/html",
+          "Content-Type": "text/html; charset=utf-8",
+        },
+      });
+    }
+
+    if (new URL(ctx.request.url).pathname === "/") {
+      let html = fs
+        .readFileSync(join("dist", "public", "index.html"))
+        .toString();
+
+      return new Response(html, {
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+        },
+      });
+    }
+
+    const response = await ctx.next();
+
+    if (!response) {
+      throw new Error("No response");
+    }
+
+    return response;
+  };
+
+  return compose(viteHandler, handler);
+}
+
+/**
+ *
+ * @param {import('vite').ViteDevServer} vite
+ * @param {import('@hattip/compose').RequestContext} handler
+ * @returns {import('@hattip/core').HattipHandler}
+ */
+export function createViteProdHandler(devServer, handler, { clientOut } = {}) {
+  /** @type {import('@hattip/compose').RequestHandler} */
+  let viteHandler = async (ctx) => {
+    ctx.vite = devServer;
+    ctx.handleError = (error) => {
+      return new Response(
+        `
+            <!DOCTYPE html>
+            <html lang="en">
+              <head>
+                <meta charset="UTF-8" />
+                <title>Error</title>
+                <script type="module">
+                  import { ErrorOverlay } from '/@vite/client'
+                  document.body.appendChild(new ErrorOverlay(${JSON.stringify({
+                    message: error.message,
+                    stack: error.stack,
+                  }).replace(/</g, "\\u003c")}))
+                </script>
+              </head>
+              <body>
+              </body>
+            </html>
+          `,
+        { status: 500, headers: { "Content-Type": "text/html; charset=utf-8" } }
+      );
+    };
+
+    console.log(ctx.request.url);
+    debugger;
+    if (ctx.request.url.endsWith(".html")) {
+      let html = fs
+        .readFileSync(
+          join("dist", "public", new URL(ctx.request.url).pathname.slice(1))
+        )
+        .toString();
+      return new Response(html, {
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+        },
+      });
+    }
+
+    if (new URL(ctx.request.url).pathname === "/") {
+      let html = fs
+        .readFileSync(join("dist", "public", "index.html"))
+        .toString();
+
+      return new Response(html, {
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
         },
       });
     }

@@ -1,0 +1,19 @@
+{
+  "name": "test-node-template",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@cloudflare/kv-asset-handler": "^0.1.3",
+    "typescript": "^4.8.3",
+    "undici": "^5.10.0",
+    "vite": "^3.1.0",
+    "wrangler": "^2.0.29"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

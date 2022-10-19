@@ -4,3 +4,4 @@ packages:
   - node
   - plugin
   - playground
+  - test/**

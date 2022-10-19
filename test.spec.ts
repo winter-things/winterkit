@@ -12,18 +12,29 @@ function expectHeaders(response: Response, headers: Record<string, string>) {
   });
 }
 
-test("simple fetch", async () => {
-  const res = await fetch("http://localhost:5173");
+async function expectResponse(url: string, expectedText, expectedHeaders) {
+  const res = await fetch(
+    new URL(url, process.env.URL ?? "http://localhost:4173")
+  );
   const text = await res.text();
-  expect(text).toContain("<div>Hello</div>");
-  expectHeaders(res, {
-    "content-type": "text/html",
-    "content-length": "16",
-    // connection: "keep-alive",
-    // "keep-alive": "timeout=5",
-    // "access-control-allow-origin": "*",
-  });
+  expect(text).toContain(expectedText);
+  expectHeaders(res, expectedHeaders);
+}
 
-  expect(res.headers.get("content-type")).toBe("text/html");
-  console.log(res.headers);
+test("fetch /", async () => {
+  await expectResponse("/", "<div>Hello from /index.html</div>", {
+    "content-type": "text/html; charset=utf-8",
+  });
+}, 1000);
+
+test("fetch /index.html", async () => {
+  await expectResponse("/index.html", "<div>Hello from /index.html</div>", {
+    "content-type": "text/html; charset=utf-8",
+  });
+}, 1000);
+
+test("fetch /other.html", async () => {
+  await expectResponse("/other.html", "<div>Hello from /other.html</div>", {
+    "content-type": "text/html; charset=utf-8",
+  });
 }, 1000);

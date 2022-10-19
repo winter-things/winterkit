@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hattip/adapter-cloudflare-workers": "^0.0.19",
     "@winterkit/cloudflare-worker": "workspace:^0.0.1",
     "@winterkit/node": "workspace:*",
     "@winterkit/vite": "workspace:^0.0.3",
