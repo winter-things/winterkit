@@ -14,6 +14,7 @@ export function winter(options?: {
       vite: import("vite").ViteDevServer,
       handler: import("@hattip/compose").RequestHandler
     );
+    adapt?(vite: import("vite").ResolvedConfig);
   };
   handler?: import("@hattip/compose").RequestHandler;
 }): import("vite").Plugin;

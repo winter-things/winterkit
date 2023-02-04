@@ -26,12 +26,14 @@ export function winter(options = {}) {
         appType: "custom",
         build: {
           rollupOptions: {
-            input: {
-              index: "index.html",
-              other: "other.html",
+            output: {
+              inlineDynamicImports: true,
+              format: "esm",
             },
+            input: options.entry,
           },
-          outDir: "dist/public",
+          ssr: true,
+          outDir: "dist",
         },
       };
     },
@@ -41,21 +43,18 @@ export function winter(options = {}) {
     writeBundle: {
       sequential: true,
       async handler(_options, bundle) {
-        if (vite_config.build.ssr) {
-          return;
-        }
-
-        const bund = await vite.build({
-          build: {
-            outDir: "dist",
-            ssr: true,
-            rollupOptions: {
-              input: "./server.js",
-            },
-            emptyOutDir: false,
-          },
-          configFile: false,
-        });
+        // const bund = await vite.build({
+        //   build: {
+        //     outDir: "dist/public",
+        //     rollupOptions: {
+        //       input: {
+        //         index: "index.html",
+        //       },
+        //     },
+        //     emptyOutDir: false,
+        //   },
+        //   configFile: false,
+        // });
         // const options = {
         //   cwd,
         //   config: svelte_config,
@@ -68,10 +67,8 @@ export function winter(options = {}) {
         //     svelte_config.kit.files.serviceWorker
         //   ),
         // };
-
         // const client = client_build_info(assets, chunks);
         // const server = await build_server(options, client);
-
         /** @type {import('types').BuildData} */
         // build_data = {
         //   app_dir: svelte_config.kit.appDir,
@@ -82,7 +79,6 @@ export function winter(options = {}) {
         //   client,
         //   server,
         // };
-
         // const manifest_path = `${paths.output_dir}/server/manifest.js`;
         // fs.writeFileSync(
         //   manifest_path,
@@ -92,7 +88,61 @@ export function winter(options = {}) {
         //     routes: manifest_data.routes,
         //   })};\n`
         // );
-
+        // completed_build = true;
+      },
+    },
+    closeBundle: {
+      sequential: true,
+      async handler(_options, bundle) {
+        let adapter = options.adapter ?? vite_config.winter?.adapter;
+        if (adapter.adapt) {
+          await adapter.adapt(vite_config);
+        }
+        // const bund = await vite.build({
+        //   build: {
+        //     outDir: "dist/public",
+        //     rollupOptions: {
+        //       input: {
+        //         index: "index.html",
+        //       },
+        //     },
+        //     emptyOutDir: false,
+        //   },
+        //   configFile: false,
+        // });
+        // const options = {
+        //   cwd,
+        //   config: svelte_config,
+        //   vite_config,
+        //   vite_config_env,
+        //   build_dir: paths.build_dir, // TODO just pass `paths`
+        //   manifest_data,
+        //   output_dir: paths.output_dir,
+        //   service_worker_entry_file: resolve_entry(
+        //     svelte_config.kit.files.serviceWorker
+        //   ),
+        // };
+        // const client = client_build_info(assets, chunks);
+        // const server = await build_server(options, client);
+        /** @type {import('types').BuildData} */
+        // build_data = {
+        //   app_dir: svelte_config.kit.appDir,
+        //   manifest_data,
+        //   service_worker: options.service_worker_entry_file
+        //     ? "service-worker.js"
+        //     : null, // TODO make file configurable?
+        //   client,
+        //   server,
+        // };
+        // const manifest_path = `${paths.output_dir}/server/manifest.js`;
+        // fs.writeFileSync(
+        //   manifest_path,
+        //   `export const manifest = ${generate_manifest({
+        //     build_data,
+        //     relative_path: ".",
+        //     routes: manifest_data.routes,
+        //   })};\n`
+        // );
         // completed_build = true;
       },
     },
@@ -217,7 +267,6 @@ export function createViteHandler(devServer, handler, { clientOut } = {}) {
     };
 
     console.log(ctx.request.url);
-    debugger;
     if (ctx.request.url.endsWith(".html")) {
       let html = await devServer.transformIndexHtml(
         ctx.request.url,
@@ -231,15 +280,17 @@ export function createViteHandler(devServer, handler, { clientOut } = {}) {
     }
 
     if (new URL(ctx.request.url).pathname === "/") {
-      let html = fs
-        .readFileSync(join("dist", "public", "index.html"))
-        .toString();
+      try {
+        let html = fs
+          .readFileSync(join("dist", "public", "index.html"))
+          .toString();
 
-      return new Response(html, {
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-        },
-      });
+        return new Response(html, {
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+          },
+        });
+      } catch (e) {}
     }
 
     const response = await ctx.next();
@@ -288,8 +339,6 @@ export function createViteProdHandler(devServer, handler, { clientOut } = {}) {
       );
     };
 
-    console.log(ctx.request.url);
-    debugger;
     if (ctx.request.url.endsWith(".html")) {
       let html = fs
         .readFileSync(
@@ -304,15 +353,17 @@ export function createViteProdHandler(devServer, handler, { clientOut } = {}) {
     }
 
     if (new URL(ctx.request.url).pathname === "/") {
-      let html = fs
-        .readFileSync(join("dist", "public", "index.html"))
-        .toString();
+      try {
+        let html = fs
+          .readFileSync(join("dist", "public", "index.html"))
+          .toString();
 
-      return new Response(html, {
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-        },
-      });
+        return new Response(html, {
+          headers: {
+            "Content-Type": "text/html; charset=utf-8",
+          },
+        });
+      } catch (e) {}
     }
 
     const response = await ctx.next();

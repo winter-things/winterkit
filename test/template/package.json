@@ -15,5 +15,9 @@
   },
   "engines": {
     "node": ">=16"
+  },
+  "dependencies": {
+    "@winterkit/cloudflare-worker": "workspace:^0.0.1",
+    "@winterkit/vite": "workspace:^0.0.3"
   }
 }

@@ -15,18 +15,31 @@ const TMP_DIR = path.join(
   ".fixtures"
 );
 
+type BuildArgs = {
+  command: string;
+  args: ReadonlyArray<string>;
+  options?: child_process.SpawnOptions;
+};
+
 interface FixtureInit {
   buildStdio?: boolean;
   sourcemap?: boolean;
   files: { [filename: string]: string };
-  build: BuildArgs;
-  serve: BuildArgs & {
+  build: {
+    command: string;
+    args: ReadonlyArray<string>;
+    options?: child_process.SpawnOptions;
+  };
+  serve: {
+    command: string;
+    args: (port: number) => ReadonlyArray<string>;
+    options?: child_process.SpawnOptions;
     url?: (port: number) => string;
   };
 }
 
 interface EntryServer {
-  default: (request: FetchEvent) => Promise<Response>;
+  default: (event: { request: Request }) => Promise<Response>;
 }
 
 export type Fixture = Awaited<ReturnType<typeof createFixture>>;
@@ -39,8 +52,44 @@ export function json(value: object) {
   return JSON.stringify(value, null, 2);
 }
 
-export async function createFixture(init: FixtureInit) {
-  let projectDir = await createFixtureProject(init);
+export function createViteFixture(args: Partial<FixtureInit>) {
+  return createFixture({
+    build: {
+      command: "node",
+      args: [
+        "--experimental-vm-modules",
+        "node_modules/vite/dist/node/cli.js",
+        "build",
+      ],
+    },
+    serve: {
+      command: "node",
+      args: (port) => [
+        "--experimental-vm-modules",
+        "node_modules/vite/dist/node/cli.js",
+        "preview",
+        "--port",
+        `${port}`,
+      ],
+    },
+    files: {},
+    ...args,
+  });
+}
+
+export async function createFixture(_init: Partial<FixtureInit>) {
+  let init: FixtureInit = _init as FixtureInit;
+  let info = test.info();
+
+  if (!init.build) {
+    init.build = info.project.metadata?.build;
+  }
+
+  if (!init.serve) {
+    init.serve = info.project.metadata?.serve;
+  }
+
+  let projectDir = await createFixtureProject(init as FixtureInit);
   // let buildPath = path.resolve(
   //   projectDir,
   //   ".solid",
@@ -58,9 +107,12 @@ export async function createFixture(init: FixtureInit) {
   // }
 
   let ip =
-    process.env.ADAPTER === "solid-start-deno" ? "127.0.0.1" : "localhost";
+    info.project.metadata?.ip ?? process.env.ADAPTER === "solid-start-deno"
+      ? "127.0.0.1"
+      : "localhost";
   let port = await getPort();
   console.log(port);
+
   let proc = spawn(init.serve.command, init.serve.args?.(port), {
     cwd: projectDir,
     ...(init.serve.options ?? {}),
@@ -288,12 +340,6 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
 
   return projectDir;
 }
-
-type BuildArgs = {
-  command: string;
-  args: (port: string) => ReadonlyArray<string>;
-  options?: child_process.SpawnOptions;
-};
 
 function build(
   buildConfig: BuildArgs,

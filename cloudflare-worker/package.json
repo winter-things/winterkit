@@ -6,9 +6,11 @@
     "miniflare.js",
     "index.js"
   ],
+  "module": "index.js",
   "type": "module",
   "dependencies": {
     "@hattip/adapter-cloudflare-workers": "^0.0.19",
+    "@hattip/bundler-cloudflare-workers": "^0.0.19",
     "@miniflare/http-server": "^2.10.0",
     "@miniflare/web-sockets": "^2.10.0",
     "@types/ws": "^8.5.3",
