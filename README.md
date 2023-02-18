@@ -61,19 +61,7 @@ export default defineConfig({
   - Unit tests for the runtime, 
     - each runtime should run the test suite in a native environment, and be able to report back the results
     - each platform should run the test suite in a native environment, and be able to report back the results
-  - Integration tests for the platform, 
-
-[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
-
-[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
-
-[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
-
-[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
-
-[ ] Tests for standard runtime APIs, eg. Fetch API, Streams API, Crypto API. Run these on actual environments by deploying an app to each platform, for various configs. And then make HTTP requests to them and during the request, tests with run and assert behaviour. No mocking anywhere. This is a good way to test the runtime, and also a good way to test the platform.
-
-[ ] Tests for standard runtime
+  - Integration tests for the platform
 
 ## Why?
 
